@@ -216,9 +216,17 @@ GROUP BY order_id
 */
 
 
-/* Using partition by to select rows */
+/* Deleting duplicate values */
+/*
 WITH ranked AS (
 SELECT ctid,
     ROW_NUMBER() OVER (PARTITION BY order_id, order_item_id ORDER BY ctid) as rn
-)
 FROM olist_data
+)
+
+DELETE FROM olist_data
+USING ranked
+WHERE ranked.ctid = olist_data.ctid 
+    AND ranked.rn>1;
+
+*/
